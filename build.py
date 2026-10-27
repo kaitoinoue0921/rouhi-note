@@ -4,6 +4,7 @@ txt format: 1行目=題, 2行目=要約, 3行目=分類, 空行, 以降は空行
 import glob, html, os, re
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+BASE = "https://kaitoinoue0921.github.io/rouhi-note/"
 SITE = "浪費ノート"
 TAG = "暇と退屈の倫理学から考える、浪費の暮らし方"
 
@@ -17,8 +18,9 @@ def load():
         items.append(dict(slug=slug, title=title, lede=lede, cat=cat, paras=paras))
     return items
 
-def page(title, body, depth, desc):
+def page(title, body, depth, desc, path=""):
     up = "../" * depth
+    url = BASE + path
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -26,6 +28,15 @@ def page(title, body, depth, desc):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
+<link rel="canonical" href="{url}">
+<link rel="icon" href="{up}favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{SITE}">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="{html.escape(title)}">
+<meta property="og:description" content="{html.escape(desc)}">
+<meta property="og:url" content="{url}">
+<meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="{up}style.css">
 </head>
 <body>
@@ -55,7 +66,7 @@ def main():
     # guide
     nxt = f'<p class="more"><a href="a/{arts[0]["slug"]}.html">最初の記事へ：{html.escape(arts[0]["title"])}</a></p>'
     open(os.path.join(ROOT, "guide.html"), "w", encoding="utf-8").write(
-        page(f'{guide["title"]} | {SITE}', article_html(guide, 0, nxt), 0, guide["lede"]))
+        page(f'{guide["title"]} | {SITE}', article_html(guide, 0, nxt), 0, guide["lede"], "guide.html"))
 
     # articles
     for i, it in enumerate(arts):
@@ -63,8 +74,12 @@ def main():
         nav += (f'<a href="{arts[i-1]["slug"]}.html">← {html.escape(arts[i-1]["title"])}</a>' if i else "<span></span>")
         nav += (f'<a href="{arts[i+1]["slug"]}.html">{html.escape(arts[i+1]["title"])} →</a>' if i + 1 < len(arts) else "<span></span>")
         nav += "</nav>"
+        rel = [a for j, a in enumerate(arts) if j not in (i, i-1, (i+1) % len(arts))]
+        rel = (rel[i % len(rel):] + rel[:i % len(rel)])[:3]
+        nav += '<section class="rel"><h2 class="sec">ほかの記事</h2>' + "".join(
+            f'<a href="{a["slug"]}.html"><span class="cat">{html.escape(a["cat"])}</span> {html.escape(a["title"])}</a>' for a in rel) + "</section>"
         open(os.path.join(ROOT, "a", it["slug"] + ".html"), "w", encoding="utf-8").write(
-            page(f'{it["title"]} | {SITE}', article_html(it, 1, nav), 1, it["lede"]))
+            page(f'{it["title"]} | {SITE}', article_html(it, 1, nav), 1, it["lede"], "a/" + it["slug"] + ".html"))
 
     # index
     cards = "\n".join(
@@ -79,7 +94,7 @@ def main():
 <div class="grid">
 {cards}
 </div></section>"""
-    open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8").write(page(f"{SITE} | {TAG}", body, 0, TAG))
+    open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8").write(page(f"{SITE} | {TAG}", body, 0, TAG, ""))
     print("built", len(arts), "articles")
 
 main()

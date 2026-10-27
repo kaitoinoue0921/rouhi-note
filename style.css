@@ -24,3 +24,5 @@ article p{margin:0 0 1.6em;text-align:justify}
 .pn a{text-decoration:none}
 footer{max-width:720px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-size:.8rem;line-height:1.8}
 @media(min-width:640px){.grid{grid-template-columns:1fr 1fr}}
+.rel{margin-top:2.5em}.rel a{display:block;padding:.5em 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--fg);line-height:1.6}.rel .cat{margin-right:.6em}
+@media(max-width:480px){body{font-size:16px}.top{flex-wrap:wrap;gap:8px}nav a{margin-left:0;margin-right:16px}h1{font-size:1.4rem}.hero h1{font-size:1.7rem}.pn{flex-direction:column}}
