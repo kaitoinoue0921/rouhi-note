@@ -26,3 +26,4 @@ footer{max-width:720px;margin:0 auto;padding:0 16px 40px;color:var(--mute);font-
 @media(min-width:640px){.grid{grid-template-columns:1fr 1fr}}
 .rel{margin-top:2.5em}.rel a{display:block;padding:.5em 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--fg);line-height:1.6}.rel .cat{margin-right:.6em}
 @media(max-width:480px){body{font-size:16px}.top{flex-wrap:wrap;gap:8px}nav a{margin-left:0;margin-right:16px}h1{font-size:1.4rem}.hero h1{font-size:1.7rem}.pn{flex-direction:column}}
+.day{font-size:1.15rem;margin:.1em 0 .4em}article .more{margin:-.8em 0 2em;font-size:.9rem}
